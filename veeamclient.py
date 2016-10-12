@@ -46,7 +46,7 @@ class VeeamSession(object):
 
         self.api_auth_url = self._get_auth_url()
 
-        (self.api_session_id, self.api_session_id_plain) = self._login()
+        (self.session_id, self.session_id_plain) = self._login()
 
 
     def _get_auth_url(self):
@@ -143,12 +143,9 @@ class VeeamSession(object):
 
 
     def get_capabilities(self):
-        session = self.get_logonSession()
-
-
-    @property
-    def session_id(self):
-        return self.api_session_id
+        session = self.get_logonSession(self.session_id_plain)
+        links = session.find('veeam:Links', self._ns)
+        return links
 
 
     @property
@@ -163,7 +160,7 @@ class VeeamSession(object):
 
     @property
     def logonSession(self):
-        return self.get_logonSession(self.api_session_id_plain)
+        return self.get_logonSession(self.session_id_plain)
 
 
     @property
@@ -175,6 +172,20 @@ class VeeamSession(object):
         self.api_namespace = namespace
         self._ns = self.api_namespace
 
+
+    @property
+    def logon_paths(self):
+        links = self.get_capabilities()
+        paths = []
+
+        for link in links:
+            url = link.attrib.get('Href')
+            paths.append(
+                '/{path}'.format(
+                    path=url.split(self.api_url, 2)[-1]
+                )
+            )
+        return paths
 
 
 class BaseVeeam(object):
