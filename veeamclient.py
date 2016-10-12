@@ -166,6 +166,17 @@ class VeeamSession(object):
         return self.get_logonSession(self.api_session_id_plain)
 
 
+    @property
+    def namespace(self):
+        return self.api_namespace
+
+    @namespace.setter
+    def namespace(self, namespace={}):
+        self.api_namespace = namespace
+        self._ns = self.api_namespace
+
+
+
 class BaseVeeam(object):
 
     def __init__(self, session):

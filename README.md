@@ -27,7 +27,7 @@ The library will mostly return XML Element objects. Like here where you see all 
 		print(session.find('veeam:UserName', v._ns).text)
 		print(session.find('veeam:SessionId', v._ns).text)
 
-The Veeam API requires an XML namespace that is hard coded and defined as 'veeam' in this library. Use v.api\_namespace to reference it.
+The Veeam API requires an XML namespace that is hard coded and defined as 'veeam' in this library. Use v.namespace to reference it.
 
 You can also define your own prefix for the namespace. 
 
@@ -41,4 +41,4 @@ Use repl.py for simple debugging, for example:
 
 	$ ipython -i -- repl.py --username secret --read-password
 
-Lastly read the source, veeamclient.py is pretty self-explanatory for any python-coder.
+Lastly read the source, veeamclient.py should be pretty self-explanatory to python users.
