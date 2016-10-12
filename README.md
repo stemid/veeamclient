@@ -55,7 +55,7 @@ See the list\_job\_statistics.py file in tests/ that lists the current job stati
 
 Use repl.py for simple debugging, for example:
 
-	$ ipython -i -- repl.py --username secret --read-password
+	$ ipython -i -- repl.py --config client.cfg
 
 Lastly read the source, veeamclient.py should be pretty self-explanatory to python users.
 
