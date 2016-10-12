@@ -12,7 +12,7 @@ Very much an unfinished product right now, only finished as far as I needed it.
 
 Get a Veeam session.
 
-  v = VeeamSession(
+	v = VeeamSession(
 		username='secret',
 		password='secret',
 	)
