@@ -4,64 +4,44 @@
 
 from sys import exit
 from getpass import getpass
-from argparse import ArgumentParser
+from argparse import ArgumentParser, FileType
+try:
+    from ConfigParser import RawConfigParser
+except ImportError:
+    from configparser import RawConfigParser
+
 from veeamclient import VeeamSession, VeeamReports
 
 parser = ArgumentParser()
 
 parser.add_argument(
-    '--username',
+    '--config', '-c',
+    type=FileType('r'),
     required=True
-)
-
-parser.add_argument(
-    '--hostname',
-    default='localhost',
-    help='Veeam Enterprise Manager hostname'
-)
-
-parser.add_argument(
-    '--password'
-)
-
-parser.add_argument(
-    '--read-password',
-    action='store_true',
-    default=False,
-    help='Read password from stdin.'
-)
-
-parser.add_argument(
-    '--use-ssl',
-    action='store_true',
-    default=False
-)
-
-parser.add_argument(
-    '--verify-ssl',
-    action='store_true',
-    default=False
 )
 
 args = parser.parse_args()
 
-if args.read_password:
-    password = getpass('Password: ')
-else:
-    if not args.password:
-        print('Must provide password on command line or from stdin')
-        exit(1)
-    password = args.password
+config = RawConfigParser()
+config.readfp(args.config)
 
 v = VeeamSession(
-    hostname=args.hostname,
-    username=args.username,
-    password=password,
-    use_tls=args.use_ssl,
-    verify_tls=args.verify_ssl
+    hostname=config.get('veeam', 'hostname'),
+    username=config.get('veeam', 'username'),
+    password=config.get('veeam', 'password'),
+    use_tls=config.getboolean('veeam', 'use_ssl'),
+    verify_tls=config.getboolean('veeam', 'verify_ssl')
 )
 
 reports = VeeamReports(v)
 statistics = reports.job_statistics
 for stat in statistics:
-    print(stat.tag, stat.text)
+    # Fugli hack to get rid of the namespace prefix in tag names, assuming
+    # your namespace dict only has one namespaces defined.
+    print('{job}: {status}'.format(
+        job=stat.tag.replace(
+            '{{{ns}}}'.format(
+                ns=list(v.namespace.values())[0]
+            ), ''),
+        status=stat.text
+    ))
