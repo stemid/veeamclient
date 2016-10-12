@@ -23,10 +23,9 @@ Get your session ID.
 
 The library will mostly return XML Element objects. Like here where you see all the current logon sessions.
 
-	sessions = v.logonSessions
-	for session in sessions:
-		print(session.attrib.get('veeam:UserName', v.api_namespace), \
-			session.attrib.get('veeam:SessionId', v.api_namespace))
+	for session in v.logonSessions:
+		print(session.find('veeam:UserName', v._ns).text)
+		print(session.find('veeam:SessionId', v._ns).text)
 
 The Veeam API requires an XML namespace that is hard coded and defined as 'veeam' in this library. Use v.api\_namespace to reference it.
 
