@@ -197,6 +197,11 @@ class BaseVeeam(object):
             raise StandardError('Must log in with VeeamSession first')
 
 
+"""
+API Path: /reports/
+
+Takes a VeeamSession instance as argument.
+"""
 class VeeamReports(BaseVeeam):
 
     def _get_summary_job_statistics(self):
