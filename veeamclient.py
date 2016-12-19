@@ -121,7 +121,7 @@ class VeeamSession(object):
 
     def _check_login(self):
         result = self.get_path('/logonSessions/{session_id}'.format(
-            session_id=self.api_session_id_plain
+            session_id=self.session_id_plain
         ))
         
         if result.status_code == 401:
